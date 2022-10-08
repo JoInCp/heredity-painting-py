@@ -48,3 +48,23 @@ def compute_fitness(genome):
   for gene in genome:
     cv2.circle(out, center=tuple(gene.center), radius=gene.radius, color=(int(gene.color[0]), int(gene.color[1]), int(gene.color[2])), thickness=-1)
   fitness = 255. / compare_mse(img, out)
+  return fitness, out
+
+def compute_population(g):
+  genome = deepcopy(g)
+  if len(genome) < 200:
+    for gene in genome:
+      if random.uniform(0, 1) < pomo:
+        gene.mutate()
+  else:
+    for gene in random.sample(genome, k=int(len(genome) * pomo)):
+      gene.mutate()
+
+  if random.uniform(0, 1) < poaaciagg:
+    genome.append(Gene())
+
+  if len(genome) > 0 and random.uniform(0, 1) < potdoaciagg:
+    genome.remove(random.choice(genome))
+    
+  new_fitness, new_out = compute_fitness(genome)
+  return new_fitness, genome, new_out
