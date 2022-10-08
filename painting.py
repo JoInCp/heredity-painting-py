@@ -4,7 +4,7 @@ import multiprocessing as mp
 from copy import deepcopy
 from skimage.metrics import mean_squared_error as compare_mse
 
-img = cv2.imread('img/imgname')
+img = cv2.imread('img/test.png')
 height, width, channels = img.shape
 
 nofg = 50 #number of first genes
@@ -13,7 +13,7 @@ pomo = 0.01 #probability of mutation occurrence
 poaaciagg = 0.3 #probability of adding a circle in a gene group
 potdoaciagg = 0.2 #Probability of the disappearance of a circle in a gene group
 
-circle_min, circle_max = 2, 10
+circle_min, circle_max = 3, 10
 image_storage_cycle = 100
 
 class Gene():
@@ -75,3 +75,28 @@ if __name__ == '__main__':
   best_genome = [Gene() for _ in range(nofg)]
   best_fitness, best_out = compute_fitness(best_genome)
   n_gen = 0
+
+  while True:
+    try:
+      results = p.map(compute_population, [deepcopy(best_genome)] * noggp)
+    except KeyboardInterrupt:
+      p.close()
+      break
+    results.append([best_fitness, best_genome, best_out])
+    new_fitnesses, new_genomes, new_outs = zip(*results)
+    best_result = sorted(zip(new_fitnesses, new_genomes, new_outs), key=lambda x: x[0], reverse=True)
+    best_fitness, best_genome, best_out=best_result[0]
+    print('Generation #%s, Fitness %s' % (n_gen, best_fitness))
+    n_gen += 1
+
+    if n_gen % image_storage_cycle==0:
+      cv2.imwrite('result/%s_%s.jpg' % ('result2', n_gen), best_out)
+
+    cv2.imshow('best out', best_out)
+
+    if cv2.waitKey(1)==ord('q'):
+     p.close()
+     break
+
+  cv2.imshow('best out', best_out)
+  cv2.waitKey(0)
