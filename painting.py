@@ -52,19 +52,26 @@ def compute_fitness(genome):
 
 def compute_population(g):
   genome = deepcopy(g)
-  if len(genome) < 200:
+  if len(genome)<200:
     for gene in genome:
-      if random.uniform(0, 1) < pomo:
+      if random.uniform(0, 1)<pomo:
         gene.mutate()
   else:
     for gene in random.sample(genome, k=int(len(genome) * pomo)):
       gene.mutate()
 
-  if random.uniform(0, 1) < poaaciagg:
+  if random.uniform(0, 1)<poaaciagg:
     genome.append(Gene())
 
-  if len(genome) > 0 and random.uniform(0, 1) < potdoaciagg:
+  if len(genome)>0 and random.uniform(0, 1)<potdoaciagg:
     genome.remove(random.choice(genome))
-    
+
   new_fitness, new_out = compute_fitness(genome)
   return new_fitness, genome, new_out
+
+if __name__ == '__main__':
+  os.makedirs('result', exist_ok=True)
+  p = mp.Pool(mp.cpu_count()-1)
+  best_genome = [Gene() for _ in range(nofg)]
+  best_fitness, best_out = compute_fitness(best_genome)
+  n_gen = 0
