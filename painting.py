@@ -7,9 +7,9 @@ from skimage.metrics import mean_squared_error as compare_mse
 img = cv2.imread('img/test.png')
 height, width, channels = img.shape
 
-nofg = 50 #number of first genes
-noggp = 50 #number of gene groups pergeneration
-pomo = 0.01 #probability of mutation occurrence
+first_genes = 50 #number of first genes
+gene_groups = 50 #number of gene groups pergeneration
+mutation_occurrence = 0.01 #probability of mutation occurrence
 poaaciagg = 0.3 #probability of adding a circle in a gene group
 potdoaciagg = 0.2 #Probability of the disappearance of a circle in a gene group
 
@@ -54,10 +54,10 @@ def compute_population(g):
   genome = deepcopy(g)
   if len(genome)<200:
     for gene in genome:
-      if random.uniform(0, 1)<pomo:
+      if random.uniform(0, 1)<mutation_occurrence:
         gene.mutate()
   else:
-    for gene in random.sample(genome, k=int(len(genome) * pomo)):
+    for gene in random.sample(genome, k=int(len(genome) * mutation_occurrence)):
       gene.mutate()
 
   if random.uniform(0, 1)<poaaciagg:
@@ -72,13 +72,13 @@ def compute_population(g):
 if __name__ == '__main__':
   os.makedirs('result', exist_ok=True)
   p = mp.Pool(mp.cpu_count()-1)
-  best_genome = [Gene() for _ in range(nofg)]
+  best_genome = [Gene() for _ in range(first_genes)]
   best_fitness, best_out = compute_fitness(best_genome)
   n_gen = 0
 
   while True:
     try:
-      results = p.map(compute_population, [deepcopy(best_genome)] * noggp)
+      results = p.map(compute_population, [deepcopy(best_genome)] * gene_groups)
     except KeyboardInterrupt:
       p.close()
       break
