@@ -4,7 +4,7 @@ import multiprocessing as mp
 from copy import deepcopy
 from skimage.metrics import mean_squared_error as compare_mse
 
-img = cv2.imread('img/test.png')
+img = cv2.imread('img/s.jpeg')
 height, width, channels = img.shape
 
 first_genes = 50 #number of first genes
@@ -13,7 +13,7 @@ mutation_occurrence = 0.01 #probability of mutation occurrence
 poaaciagg = 0.3 #probability of adding a circle in a gene group
 potdoaciagg = 0.2 #Probability of the disappearance of a circle in a gene group
 
-circle_min, circle_max = 3, 10
+circle_min, circle_max =  3, 10
 image_storage_cycle = 100
 
 class Gene():
@@ -27,10 +27,7 @@ class Gene():
 
     r = random.uniform(0, 1)
     if r<0.33:
-      self.radius = np.clip(random.randint(
-        int(self.radius * (1 - mutation_size)),
-        int(self.radius * (1 + mutation_size))
-      ), 1, 100)
+      self.radius = np.clip(random.randint(int(self.radius * (1 - mutation_size)), int(self.radius * (1 + mutation_size))), 1, 100)
     elif r<0.66:
       self.center = np.array([
         np.clip(random.randint(int(self.center[0] * (1-mutation_size)), int(self.center[0] * (1+mutation_size))), 0, width),
@@ -90,7 +87,7 @@ if __name__ == '__main__':
     n_gen += 1
 
     if n_gen % image_storage_cycle==0:
-      cv2.imwrite('result/%s_%s.jpg' % ('result2', n_gen), best_out)
+      cv2.imwrite('result/%s_%s.jpg' % ('result', n_gen), best_out)
 
     cv2.imshow('best out', best_out)
 
