@@ -1,3 +1,19 @@
+# 유전 알고리즘을 이용한 그림그리기
+
+##    OriginalㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤResult
+
+<div align="">
+  
+  <a href="https://user-images.githubusercontent.com/105797125/197423130-867e5c2c-7f70-4b47-b04c-8a3f03db75f8.png">
+    <img align="center" src="https://user-images.githubusercontent.com/105797125/197423130-867e5c2c-7f70-4b47-b04c-8a3f03db75f8.png" width="410" height="250"/>
+  </a>
+  <a href="https://user-images.githubusercontent.com/105797125/197423119-f45163cc-4401-471e-8608-40348e04712f.gif">
+    <img align="center" src="https://user-images.githubusercontent.com/105797125/197423119-f45163cc-4401-471e-8608-40348e04712f.gif" width="400" height="250"/>
+  </a>
+</div>
+
+
+
 ##### 첫번째 유전자 개수
 ```python
 first_genes = 50
@@ -53,19 +69,29 @@ return fitness, out
 ##### 유전자를 한꺼번에 돌연변이로 만듬
 def compute_population(g):
   genome = deepcopy(g)
-  
+```  
 ##### 유전자의 개수에 따라 변이를 바꿔줌
-  if len(genome) < 200:
-    for gene in genome:
-      if random.uniform(0, 1) < prob_mutation:
-        gene.mutate()
-  else:
-    for gene in random.sample(genome, k=int(len(genome) * prob_mutation)):
+```python
+if len(genome) < 200:
+  for gene in genome:
+    if random.uniform(0, 1) < prob_mutation:
       gene.mutate()
-
-
-
-
-    
-    
-    
+else:
+  for gene in random.sample(genome, k=int(len(genome) * prob_mutation)):
+    gene.mutate()
+```
+##### 유전자 추가
+```python
+if random.uniform(0, 1)<poaaciagg:
+    genome.append(Gene())
+```
+##### 유전자 삭제
+```python
+if len(genome)>0 and random.uniform(0, 1)<potdoaciagg:
+    genome.remove(random.choice(genome))
+```    
+##### 새로운 유전자 점수 측정
+```python
+new_fitness, new_out = compute_fitness(genome)
+  return new_fitness, genome, new_out
+```    
